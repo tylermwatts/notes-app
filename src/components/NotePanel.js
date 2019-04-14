@@ -1,6 +1,8 @@
 import {
   Button,
+  Divider,
   ExpansionPanel,
+  ExpansionPanelActions,
   ExpansionPanelDetails,
   ExpansionPanelSummary,
   Typography
@@ -14,7 +16,7 @@ class NotePanel extends React.Component {
   };
   render() {
     return (
-      <div>
+      <div style={{ padding: 30, width: "50vw", margin: "0 auto" }}>
         {this.props.noteArray
           ? this.props.noteArray.map((n, i) => {
               return (
@@ -26,14 +28,18 @@ class NotePanel extends React.Component {
                   </ExpansionPanelSummary>
                   <ExpansionPanelDetails>
                     <Typography>{n.body}</Typography>
+                  </ExpansionPanelDetails>
+                  <Divider />
+                  <ExpansionPanelActions>
                     <Button
+                      variant="contained"
                       size="small"
-                      color="primary"
+                      color="secondary"
                       onClick={() => this.handleDelete(i)}
                     >
                       Delete
                     </Button>
-                  </ExpansionPanelDetails>
+                  </ExpansionPanelActions>
                 </ExpansionPanel>
               );
             })
