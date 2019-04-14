@@ -25,6 +25,13 @@ class NoteForm extends Component {
     }
   };
 
+  handleDelete = i => {
+    const newNoteArr = this.state.notes.filter((ele, index, arr) => {
+      return index !== i;
+    });
+    this.setState({ notes: newNoteArr });
+  };
+
   render() {
     const { notes, noteTitle, noteBody } = this.state;
     return (
@@ -40,8 +47,9 @@ class NoteForm extends Component {
           <TextField
             id="note-body"
             margin="none"
-            multiline={true}
-            label="Note"
+            multiline
+            rows="4"
+            label="Note Body"
             onChange={e => this.handleChange(e, "noteBody")}
           />
           <br />
@@ -52,7 +60,7 @@ class NoteForm extends Component {
             Save
           </Button>
         </form>
-        <NotePanel noteArray={notes} />
+        <NotePanel noteArray={notes} deleteHandler={this.handleDelete} />
       </div>
     );
   }
