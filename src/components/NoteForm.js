@@ -3,24 +3,30 @@ import React, { Component } from "react";
 
 class NoteForm extends Component {
   state = {
+    notes: [],
     noteTitle: "",
     noteBody: ""
   };
 
   handleChange = (e, field) => {
-    e.preventDefault();
     this.setState({ [field]: e.target.value });
   };
 
   handleSave = (e, title, body) => {
-    e.preventDefault();
-    console.log({ title, body });
+    if (title === "" || body === "") {
+      alert("Your note is missing a title or body!");
+    } else {
+      const notesArr = [...this.state.notes, { title, body }];
+      this.setState({ notes: notesArr });
+      this.setState({ noteTitle: "", noteBody: "" });
+      document.getElementById("note-form").reset();
+    }
   };
 
   render() {
     const { noteTitle, noteBody } = this.state;
     return (
-      <form>
+      <form id="note-form">
         <TextField
           id="note-title"
           margin="normal"
