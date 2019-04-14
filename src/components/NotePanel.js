@@ -8,12 +8,19 @@ import {
   Typography
 } from "@material-ui/core";
 import { ExpandMoreOutlined } from "@material-ui/icons";
+import marked from "marked";
 import React from "react";
 
 class NotePanel extends React.Component {
   handleDelete = i => {
     this.props.deleteHandler(i);
   };
+
+  markdownText = text => {
+    let rawMarkup = marked(text, { sanitize: true });
+    return { __html: rawMarkup };
+  };
+
   render() {
     return (
       <div style={{ padding: 30, width: "50vw", margin: "0 auto" }}>
@@ -27,7 +34,9 @@ class NotePanel extends React.Component {
                     </Typography>
                   </ExpansionPanelSummary>
                   <ExpansionPanelDetails>
-                    <Typography>{n.body}</Typography>
+                    <Typography
+                      dangerouslySetInnerHTML={this.markdownText(n.body)}
+                    />
                   </ExpansionPanelDetails>
                   <Divider />
                   <ExpansionPanelActions>

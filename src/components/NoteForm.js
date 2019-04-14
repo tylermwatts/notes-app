@@ -1,4 +1,4 @@
-import { Button, Paper, TextField } from "@material-ui/core";
+import { Button, Paper, TextField, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import React, { Component } from "react";
 import NotePanel from "./NotePanel";
@@ -68,7 +68,18 @@ class NoteForm extends Component {
     const { notes, noteTitle, noteBody } = this.state;
     const { classes } = this.props;
     return (
-      <div style={{ margin: "5% auto" }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          margin: "5% auto",
+          alignItems: "center"
+        }}
+      >
+        <Typography component="h1" variant="display3">
+          Basic Notes App | by Warpfox
+        </Typography>
+        <br />
         <Paper className={classes.paper}>
           <form className={classes.container} id="note-form">
             <TextField
