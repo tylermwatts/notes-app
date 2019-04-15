@@ -27,8 +27,10 @@ class NoteForm extends Component {
 
   getLocalStorage = () => {
     let notes = window.localStorage.getItem("notes");
-    notes = JSON.parse(notes);
-    this.setState({ notes });
+    if (notes !== null) {
+      notes = JSON.parse(notes);
+      this.setState({ notes });
+    }
   };
 
   componentDidMount() {
