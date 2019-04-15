@@ -51,15 +51,6 @@ class NoteForm extends Component {
     localStorage.setItem("notes", JSON.stringify(this.state.notes));
   };
 
-  editNote = index => {
-    this.setState({ editing: true, editingIndex: index });
-    const { notes } = this.state;
-    this.setState({
-      noteTitle: notes[index].title,
-      noteBody: notes[index].body
-    });
-  };
-
   handleChange = (e, field) => {
     this.setState({ [field]: e.target.value });
   };
@@ -76,6 +67,15 @@ class NoteForm extends Component {
       this.setState({ notes: notesArr, noteTitle: "", noteBody: "" });
       document.getElementById("note-form").reset();
     }
+  };
+
+  editNote = index => {
+    this.setState({ editing: true, editingIndex: index });
+    const { notes } = this.state;
+    this.setState({
+      noteTitle: notes[index].title,
+      noteBody: notes[index].body
+    });
   };
 
   handleEditSave = (e, title, body) => {
