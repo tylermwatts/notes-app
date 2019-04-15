@@ -31,15 +31,25 @@ class NoteForm extends Component {
     editingIndex: null
   };
 
+  componentDidMount() {
+    this.getLocalStorage();
+    window.addEventListener("beforeunload", this.saveToStorage.bind(this));
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("beforeunload", this.saveToStorage.bind(this));
+    this.saveToStorage();
+  }
+
   getLocalStorage = () => {
     let notes = localStorage.getItem("notes") || [];
     notes = JSON.parse(notes);
     this.setState({ notes });
   };
 
-  componentDidMount() {
-    this.getLocalStorage();
-  }
+  saveToStorage = () => {
+    localStorage.setItem("notes", JSON.stringify(this.state.notes));
+  };
 
   editNote = index => {
     this.setState({ editing: true, editingIndex: index });
@@ -54,10 +64,6 @@ class NoteForm extends Component {
     this.setState({ [field]: e.target.value });
   };
 
-  saveToStorage = notes => {
-    localStorage.setItem("notes", JSON.stringify(notes));
-  };
-
   handleSave = (e, title, body) => {
     e.preventDefault();
     if (title === "" || body === "") {
@@ -68,7 +74,6 @@ class NoteForm extends Component {
           ? [{ title, body }]
           : [...this.state.notes, { title, body }];
       this.setState({ notes: notesArr, noteTitle: "", noteBody: "" });
-      this.saveToStorage(notesArr);
       document.getElementById("note-form").reset();
     }
   };
@@ -85,7 +90,6 @@ class NoteForm extends Component {
         editing: false,
         editingIndex: null
       });
-      this.saveToStorage(notes);
       document.getElementById("note-form").reset();
     }
   };
@@ -100,7 +104,6 @@ class NoteForm extends Component {
       return index !== i;
     });
     this.setState({ notes: newNoteArr });
-    this.saveToStorage(newNoteArr);
   };
 
   render() {
