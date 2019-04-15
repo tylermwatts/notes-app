@@ -3,7 +3,7 @@ import { withStyles } from "@material-ui/core/styles";
 import React, { Component } from "react";
 import NotePanel from "./NotePanel";
 
-const styles = theme => ({
+const styles = {
   paper: {
     width: "50vw",
     margin: "0 auto"
@@ -20,14 +20,15 @@ const styles = theme => ({
     width: "100px",
     margin: "5px auto"
   }
-});
+};
 
 class NoteForm extends Component {
   state = {
     notes: [],
     noteTitle: "",
     noteBody: "",
-    editing: false
+    editing: false,
+    editingIndex: null
   };
 
   getLocalStorage = () => {
@@ -41,7 +42,7 @@ class NoteForm extends Component {
   }
 
   editNote = index => {
-    this.setState({ editing: true });
+    this.setState({ editing: true, editingIndex: index });
     const { notes } = this.state;
     this.setState({
       noteTitle: notes[index].title,
@@ -66,14 +67,35 @@ class NoteForm extends Component {
         this.state.notes.length === 0
           ? [{ title, body }]
           : [...this.state.notes, { title, body }];
-      this.setState({ notes: notesArr });
+      this.setState({ notes: notesArr, noteTitle: "", noteBody: "" });
       this.saveToStorage(notesArr);
-      this.setState({ noteTitle: "", noteBody: "" });
+      document.getElementById("note-form").reset();
+    }
+  };
+
+  handleEditSave = (e, title, body) => {
+    e.preventDefault();
+    let { notes, editingIndex } = this.state;
+    if (title !== "" && body !== "") {
+      notes[editingIndex] = { title, body };
+      this.setState({
+        notes: notes,
+        noteTitle: "",
+        noteBody: "",
+        editing: false,
+        editingIndex: null
+      });
+      this.saveToStorage(notes);
       document.getElementById("note-form").reset();
     }
   };
 
   handleDelete = i => {
+    if (this.state.editing) {
+      if (i === this.state.editingIndex) {
+        this.setState({ noteBody: "", noteTitle: "", editing: false });
+      }
+    }
     const newNoteArr = this.state.notes.filter((ele, index, arr) => {
       return index !== i;
     });
@@ -102,7 +124,7 @@ class NoteForm extends Component {
             <TextField
               style={{ margin: 8 }}
               fullWidth
-              id="note-title"
+              id="noteTitle"
               margin="normal"
               label="Note Title"
               placeholder="Type here to enter a title"
@@ -129,14 +151,25 @@ class NoteForm extends Component {
               value={noteBody}
             />
             <br />
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.saveButton}
-              onClick={e => this.handleSave(e, noteTitle, noteBody)}
-            >
-              Save
-            </Button>
+            {!this.state.editing ? (
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.saveButton}
+                onClick={e => this.handleSave(e, noteTitle, noteBody)}
+              >
+                Save
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.saveEditButton}
+                onClick={e => this.handleEditSave(e, noteTitle, noteBody)}
+              >
+                Finish Editing
+              </Button>
+            )}
           </form>
         </Paper>
         <NotePanel
