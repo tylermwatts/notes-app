@@ -48,7 +48,10 @@ class NoteForm extends Component {
     if (title === "" || body === "") {
       alert("Your note is missing a title or body!");
     } else {
-      const notesArr = [...this.state.notes, { title, body }];
+      let notesArr =
+        this.state.notes.length === 0
+          ? [{ title, body }]
+          : [...this.state.notes, { title, body }];
       this.setState({ notes: notesArr });
       this.saveToStorage(notesArr);
       this.setState({ noteTitle: "", noteBody: "" });
