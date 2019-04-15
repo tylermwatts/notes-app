@@ -12,7 +12,11 @@ const styles = theme => ({
     display: "flex",
     flexWrap: "wrap"
   },
-  button: {
+  saveButton: {
+    width: "100px",
+    margin: "5px auto"
+  },
+  saveEditButton: {
     width: "100px",
     margin: "5px auto"
   }
@@ -22,11 +26,12 @@ class NoteForm extends Component {
   state = {
     notes: [],
     noteTitle: "",
-    noteBody: ""
+    noteBody: "",
+    editing: false
   };
 
   getLocalStorage = () => {
-    let notes = window.localStorage.getItem("notes") || [];
+    let notes = localStorage.getItem("notes") || [];
     notes = JSON.parse(notes);
     this.setState({ notes });
   };
@@ -35,12 +40,21 @@ class NoteForm extends Component {
     this.getLocalStorage();
   }
 
+  editNote = index => {
+    this.setState({ editing: true });
+    const { notes } = this.state;
+    this.setState({
+      noteTitle: notes[index].title,
+      noteBody: notes[index].body
+    });
+  };
+
   handleChange = (e, field) => {
     this.setState({ [field]: e.target.value });
   };
 
   saveToStorage = notes => {
-    window.localStorage.setItem("notes", JSON.stringify(notes));
+    localStorage.setItem("notes", JSON.stringify(notes));
   };
 
   handleSave = (e, title, body) => {
@@ -96,6 +110,7 @@ class NoteForm extends Component {
                 shrink: true
               }}
               onChange={e => this.handleChange(e, "noteTitle")}
+              value={noteTitle}
             />
             <br />
             <TextField
@@ -111,19 +126,24 @@ class NoteForm extends Component {
                 shrink: true
               }}
               onChange={e => this.handleChange(e, "noteBody")}
+              value={noteBody}
             />
             <br />
             <Button
               variant="contained"
               color="primary"
-              className={classes.button}
+              className={classes.saveButton}
               onClick={e => this.handleSave(e, noteTitle, noteBody)}
             >
               Save
             </Button>
           </form>
         </Paper>
-        <NotePanel noteArray={notes} deleteHandler={this.handleDelete} />
+        <NotePanel
+          noteArray={notes}
+          deleteHandler={this.handleDelete}
+          editNote={this.editNote}
+        />
       </div>
     );
   }

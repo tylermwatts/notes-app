@@ -16,6 +16,10 @@ class NotePanel extends React.Component {
     this.props.deleteHandler(i);
   };
 
+  handleEdit = i => {
+    this.props.editNote(i);
+  };
+
   markdownText = text => {
     let rawMarkup = marked(text, { sanitize: true });
     return { __html: rawMarkup };
@@ -40,6 +44,14 @@ class NotePanel extends React.Component {
                   </ExpansionPanelDetails>
                   <Divider />
                   <ExpansionPanelActions>
+                    <Button
+                      variant="contained"
+                      size="small"
+                      color="primary"
+                      onClick={() => this.handleEdit(i)}
+                    >
+                      Edit
+                    </Button>
                     <Button
                       variant="contained"
                       size="small"
