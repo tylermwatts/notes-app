@@ -119,6 +119,17 @@ class NoteForm extends Component {
           Basic Notes App | by Warpfox
         </Typography>
         <br />
+        <Typography component="h2" variant="subtitle1">
+          The body of each note supports{" "}
+          <a
+            href="https://www.markdownguide.org/basic-syntax/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Markdown
+          </a>
+        </Typography>
+        <br />
         <Paper className={classes.paper}>
           <form className={classes.container} id="note-form">
             <TextField
