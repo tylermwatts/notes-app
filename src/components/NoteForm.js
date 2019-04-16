@@ -43,7 +43,11 @@ class NoteForm extends Component {
   };
 
   componentDidMount() {
-    this.getLocalStorage();
+    try {
+      this.getLocalStorage();
+    } catch (err) {
+      console.log({ error: err });
+    }
     window.addEventListener("beforeunload", this.saveToStorage.bind(this));
   }
 
