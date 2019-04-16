@@ -7,6 +7,7 @@ import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreOutlined from "@material-ui/icons/ExpandMoreOutlined";
 import marked from "marked";
+import PropTypes from "prop-types";
 import React from "react";
 
 class NotePanel extends React.Component {
@@ -24,10 +25,11 @@ class NotePanel extends React.Component {
   };
 
   render() {
+    const { noteArray } = this.props;
     return (
       <div style={{ padding: 30, width: "50vw", margin: "0 auto" }}>
-        {this.props.noteArray
-          ? this.props.noteArray.map((n, i) => {
+        {noteArray
+          ? noteArray.map((n, i) => {
               return (
                 <ExpansionPanel key={i} id={n.noteTitle}>
                   <ExpansionPanelSummary expandIcon={<ExpandMoreOutlined />}>
@@ -67,5 +69,11 @@ class NotePanel extends React.Component {
     );
   }
 }
+
+NotePanel.propTypes = {
+  noteArray: PropTypes.array,
+  deleteHandler: PropTypes.func,
+  editNote: PropTypes.func
+};
 
 export default NotePanel;

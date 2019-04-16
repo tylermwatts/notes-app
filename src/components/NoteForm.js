@@ -3,6 +3,7 @@ import Paper from "@material-ui/core/Paper";
 import withStyles from "@material-ui/core/styles/withStyles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
+import PropTypes from "prop-types";
 import React, { Component } from "react";
 import uuidv1 from "uuid";
 import NotePanel from "./NotePanel";
@@ -57,8 +58,7 @@ class NoteForm extends Component {
   }
 
   getLocalStorage = () => {
-    let notes = localStorage.getItem("notes") || [];
-    notes = JSON.parse(notes);
+    let notes = JSON.parse(localStorage.getItem("notes")) || [];
     this.setState({ notes });
   };
 
@@ -81,7 +81,6 @@ class NoteForm extends Component {
           ? [newNote]
           : [...this.state.notes, newNote];
       this.setState({ notes: notesArr, noteTitle: "", noteBody: "" });
-      document.getElementById("note-form").reset();
     }
   };
 
@@ -113,7 +112,6 @@ class NoteForm extends Component {
         editing: false,
         editingId: null
       });
-      document.getElementById("note-form").reset();
     }
   };
 
@@ -212,5 +210,12 @@ class NoteForm extends Component {
     );
   }
 }
+
+NoteForm.propTypes = {
+  classes: PropTypes.object.isRequired,
+  notes: PropTypes.array.isRequired,
+  noteTitle: PropTypes.string,
+  noteBody: PropTypes.string
+};
 
 export default withStyles(styles)(NoteForm);
