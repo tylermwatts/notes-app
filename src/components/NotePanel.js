@@ -1,13 +1,11 @@
-import {
-  Button,
-  Divider,
-  ExpansionPanel,
-  ExpansionPanelActions,
-  ExpansionPanelDetails,
-  ExpansionPanelSummary,
-  Typography
-} from "@material-ui/core";
-import { ExpandMoreOutlined } from "@material-ui/icons";
+import Button from "@material-ui/core/Button";
+import Divider from "@material-ui/core/Divider";
+import ExpansionPanel from "@material-ui/core/ExpansionPanel";
+import ExpansionPanelActions from "@material-ui/core/ExpansionPanelActions";
+import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
+import Typography from "@material-ui/core/Typography";
+import ExpandMoreOutlined from "@material-ui/icons/ExpandMoreOutlined";
 import marked from "marked";
 import React from "react";
 

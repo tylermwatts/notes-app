@@ -1,5 +1,8 @@
-import { Button, Paper, TextField, Typography } from "@material-ui/core";
-import { withStyles } from "@material-ui/core/styles";
+import Button from "@material-ui/core/Button";
+import Paper from "@material-ui/core/Paper";
+import withStyles from "@material-ui/core/styles/withStyles";
+import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
 import React, { Component } from "react";
 import uuidv1 from "uuid";
 import NotePanel from "./NotePanel";
