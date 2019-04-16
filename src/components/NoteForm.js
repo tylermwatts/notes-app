@@ -128,7 +128,8 @@ class NoteForm extends Component {
           display: "flex",
           flexDirection: "column",
           margin: "5% auto",
-          alignItems: "center"
+          alignItems: "center",
+          textAlign: "center"
         }}
       >
         <Typography component="h1" variant="display3">
