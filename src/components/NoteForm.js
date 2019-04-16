@@ -8,11 +8,18 @@ import uuidv1 from "uuid";
 import NotePanel from "./NotePanel";
 
 const styles = {
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    margin: "5% auto",
+    alignItems: "center",
+    textAlign: "center"
+  },
   paper: {
     width: "50vw",
     margin: "0 auto"
   },
-  container: {
+  form: {
     display: "flex",
     flexWrap: "wrap"
   },
@@ -123,15 +130,7 @@ class NoteForm extends Component {
     const { notes, noteTitle, noteBody } = this.state;
     const { classes } = this.props;
     return (
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          margin: "5% auto",
-          alignItems: "center",
-          textAlign: "center"
-        }}
-      >
+      <div className={classes.container}>
         <Typography component="h1" variant="display3">
           Basic Notes App | by Warpfox
         </Typography>
@@ -148,7 +147,7 @@ class NoteForm extends Component {
         </Typography>
         <br />
         <Paper className={classes.paper}>
-          <form className={classes.container} id="note-form">
+          <form className={classes.form} id="note-form">
             <TextField
               style={{ margin: 8 }}
               fullWidth
