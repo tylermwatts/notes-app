@@ -12,12 +12,12 @@ import marked from "marked";
 import React from "react";
 
 class NotePanel extends React.Component {
-  handleDelete = i => {
-    this.props.deleteHandler(i);
+  handleDelete = id => {
+    this.props.deleteHandler(id);
   };
 
-  handleEdit = i => {
-    this.props.editNote(i);
+  handleEdit = id => {
+    this.props.editNote(id);
   };
 
   markdownText = text => {
@@ -31,15 +31,15 @@ class NotePanel extends React.Component {
         {this.props.noteArray
           ? this.props.noteArray.map((n, i) => {
               return (
-                <ExpansionPanel key={i} id={n.title}>
+                <ExpansionPanel key={i} id={n.noteTitle}>
                   <ExpansionPanelSummary expandIcon={<ExpandMoreOutlined />}>
                     <Typography variant="title">
-                      {i + 1 + ". " + n.title}
+                      {i + 1 + ". " + n.noteTitle}
                     </Typography>
                   </ExpansionPanelSummary>
                   <ExpansionPanelDetails>
                     <Typography
-                      dangerouslySetInnerHTML={this.markdownText(n.body)}
+                      dangerouslySetInnerHTML={this.markdownText(n.noteBody)}
                     />
                   </ExpansionPanelDetails>
                   <Divider />
@@ -48,7 +48,7 @@ class NotePanel extends React.Component {
                       variant="contained"
                       size="small"
                       color="primary"
-                      onClick={() => this.handleEdit(i)}
+                      onClick={() => this.handleEdit(n.id)}
                     >
                       Edit
                     </Button>
@@ -56,7 +56,7 @@ class NotePanel extends React.Component {
                       variant="contained"
                       size="small"
                       color="secondary"
-                      onClick={() => this.handleDelete(i)}
+                      onClick={() => this.handleDelete(n.id)}
                     >
                       Delete
                     </Button>

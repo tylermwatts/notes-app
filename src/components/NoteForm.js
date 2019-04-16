@@ -1,6 +1,7 @@
 import { Button, Paper, TextField, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import React, { Component } from "react";
+import uuidv1 from "uuid";
 import NotePanel from "./NotePanel";
 
 const styles = {
@@ -28,7 +29,7 @@ class NoteForm extends Component {
     noteTitle: "",
     noteBody: "",
     editing: false,
-    editingIndex: null
+    editingId: null
   };
 
   componentDidMount() {
@@ -60,48 +61,57 @@ class NoteForm extends Component {
     if (title === "" || body === "") {
       alert("Your note is missing a title or body!");
     } else {
+      let newNote = { id: uuidv1(), noteTitle: title, noteBody: body };
       let notesArr =
         this.state.notes.length === 0
-          ? [{ title, body }]
-          : [...this.state.notes, { title, body }];
+          ? [newNote]
+          : [...this.state.notes, newNote];
       this.setState({ notes: notesArr, noteTitle: "", noteBody: "" });
       document.getElementById("note-form").reset();
     }
   };
 
-  editNote = index => {
-    this.setState({ editing: true, editingIndex: index });
+  editNote = id => {
+    this.setState({ editing: true, editingId: id });
     const { notes } = this.state;
+    let note = notes.filter(n => n.id === id);
     this.setState({
-      noteTitle: notes[index].title,
-      noteBody: notes[index].body
+      noteTitle: note[0].noteTitle,
+      noteBody: note[0].noteBody
     });
   };
 
   handleEditSave = (e, title, body) => {
     e.preventDefault();
-    let { notes, editingIndex } = this.state;
+    const { notes, editingId } = this.state;
     if (title !== "" && body !== "") {
-      notes[editingIndex] = { title, body };
+      let newNotes = notes.map(n => {
+        if (n.id === editingId) {
+          n.noteTitle = title;
+          n.noteBody = body;
+        }
+        return n;
+      });
       this.setState({
-        notes: notes,
+        notes: newNotes,
         noteTitle: "",
         noteBody: "",
         editing: false,
-        editingIndex: null
+        editingId: null
       });
       document.getElementById("note-form").reset();
     }
   };
 
-  handleDelete = i => {
+  handleDelete = id => {
+    const { editingId, notes } = this.state;
     if (this.state.editing) {
-      if (i === this.state.editingIndex) {
+      if (id === editingId) {
         this.setState({ noteBody: "", noteTitle: "", editing: false });
       }
     }
-    const newNoteArr = this.state.notes.filter((ele, index, arr) => {
-      return index !== i;
+    const newNoteArr = notes.filter(n => {
+      return n.id !== id;
     });
     this.setState({ notes: newNoteArr });
   };
