@@ -71,9 +71,9 @@ class NotePanel extends React.Component {
 }
 
 NotePanel.propTypes = {
-  noteArray: PropTypes.array,
-  deleteHandler: PropTypes.func,
-  editNote: PropTypes.func
+  noteArray: PropTypes.array.isRequired,
+  deleteHandler: PropTypes.func.isRequired,
+  editNote: PropTypes.func.isRequired
 };
 
 export default NotePanel;
