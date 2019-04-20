@@ -24,11 +24,8 @@ const styles = {
     display: "flex",
     flexWrap: "wrap"
   },
-  saveButton: {
-    width: "100px",
-    margin: "5px auto"
-  },
-  saveEditButton: {
+  button: {
+    background: "linear-gradient(45deg, #7B287D 30%, #7067CF 90%)",
     width: "100px",
     margin: "5px auto"
   }
@@ -184,7 +181,7 @@ class NoteForm extends Component {
               <Button
                 variant="contained"
                 color="primary"
-                className={classes.saveButton}
+                className={classes.button}
                 onClick={e => this.handleSave(e, noteTitle, noteBody)}
               >
                 Save
@@ -193,7 +190,7 @@ class NoteForm extends Component {
               <Button
                 variant="contained"
                 color="primary"
-                className={classes.saveEditButton}
+                className={classes.button}
                 onClick={e => this.handleEditSave(e, noteTitle, noteBody)}
               >
                 Finish Editing
