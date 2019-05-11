@@ -69,8 +69,10 @@ class NoteForm extends Component {
 
   handleSave = (e, title, body) => {
     e.preventDefault();
-    if (title === "" || body === "") {
-      alert("Your note is missing a title or body!");
+    if (title === "") {
+      alert("Your note is missing a title!");
+    } else if (body === "") {
+      alert("Your note is empty!");
     } else {
       let newNote = { id: uuidv1(), noteTitle: title, noteBody: body };
       let notesArr =
