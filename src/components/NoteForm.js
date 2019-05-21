@@ -1,5 +1,6 @@
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
+import { withStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import PropTypes from "prop-types";
@@ -30,7 +31,7 @@ const styles = {
   }
 };
 
-const NoteForm = ({ notes, setNotes }) => {
+const NoteForm = ({ classes, notes, setNotes }) => {
   const [noteTitle, setNoteTitle] = useState("");
   const [noteBody, setNoteBody] = useState("");
   const [editing, setEditing] = useState(false);
@@ -90,7 +91,7 @@ const NoteForm = ({ notes, setNotes }) => {
   };
 
   return (
-    <div className={styles.container.toString()}>
+    <div className={classes.container}>
       <Typography component="h1" variant="display3">
         Basic Notes App | by Warpfox
       </Typography>
@@ -106,8 +107,8 @@ const NoteForm = ({ notes, setNotes }) => {
         </a>
       </Typography>
       <br />
-      <Paper className={styles.paper.toString()}>
-        <form className={styles.form.toString()} id="note-form">
+      <Paper className={classes.paper}>
+        <form className={classes.form} id="note-form">
           <TextField
             style={{ margin: 8 }}
             fullWidth
@@ -142,7 +143,7 @@ const NoteForm = ({ notes, setNotes }) => {
             <Button
               variant="contained"
               color="primary"
-              className={styles.button.toString()}
+              className={classes.button}
               onClick={e => handleSave(e)}
             >
               Save
@@ -151,7 +152,7 @@ const NoteForm = ({ notes, setNotes }) => {
             <Button
               variant="contained"
               color="primary"
-              className={styles.button.toString()}
+              className={styles.button}
               onClick={e => handleEditSave(e)}
             >
               Finish Editing
@@ -169,9 +170,10 @@ const NoteForm = ({ notes, setNotes }) => {
 };
 
 NoteForm.propTypes = {
+  classes: PropTypes.object.isRequired,
   notes: PropTypes.array.isRequired,
   noteTitle: PropTypes.string,
   noteBody: PropTypes.string
 };
 
-export default NoteForm;
+export default withStyles(styles)(NoteForm);
