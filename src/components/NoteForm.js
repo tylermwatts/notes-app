@@ -1,10 +1,9 @@
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
-import withStyles from "@material-ui/core/styles/withStyles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import PropTypes from "prop-types";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import uuidv1 from "uuid";
 import NotePanel from "./NotePanel";
 
@@ -31,20 +30,11 @@ const styles = {
   }
 };
 
-const NoteForm = ({ classes }) => {
-  const [notes, setNotes] = useState([]);
+const NoteForm = ({ notes, setNotes }) => {
   const [noteTitle, setNoteTitle] = useState("");
   const [noteBody, setNoteBody] = useState("");
   const [editing, setEditing] = useState(false);
   const [editingId, setId] = useState(null);
-
-  useEffect(() => {
-    const storedNotes = JSON.parse(localStorage.getItem("notes"));
-    setNotes(storedNotes);
-    return () => {
-      localStorage.setItem("notes", JSON.stringify(notes));
-    };
-  }, []);
 
   const handleSave = e => {
     e.preventDefault();
@@ -100,7 +90,7 @@ const NoteForm = ({ classes }) => {
   };
 
   return (
-    <div className={classes.container}>
+    <div className={styles.container.toString()}>
       <Typography component="h1" variant="display3">
         Basic Notes App | by Warpfox
       </Typography>
@@ -116,8 +106,8 @@ const NoteForm = ({ classes }) => {
         </a>
       </Typography>
       <br />
-      <Paper className={classes.paper}>
-        <form className={classes.form} id="note-form">
+      <Paper className={styles.paper.toString()}>
+        <form className={styles.form.toString()} id="note-form">
           <TextField
             style={{ margin: 8 }}
             fullWidth
@@ -152,7 +142,7 @@ const NoteForm = ({ classes }) => {
             <Button
               variant="contained"
               color="primary"
-              className={classes.button}
+              className={styles.button.toString()}
               onClick={e => handleSave(e)}
             >
               Save
@@ -161,7 +151,7 @@ const NoteForm = ({ classes }) => {
             <Button
               variant="contained"
               color="primary"
-              className={classes.button}
+              className={styles.button.toString()}
               onClick={e => handleEditSave(e)}
             >
               Finish Editing
@@ -179,10 +169,9 @@ const NoteForm = ({ classes }) => {
 };
 
 NoteForm.propTypes = {
-  classes: PropTypes.object.isRequired,
   notes: PropTypes.array.isRequired,
   noteTitle: PropTypes.string,
   noteBody: PropTypes.string
 };
 
-export default withStyles(styles)(NoteForm);
+export default NoteForm;
