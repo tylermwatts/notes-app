@@ -10,65 +10,62 @@ import marked from "marked";
 import PropTypes from "prop-types";
 import React from "react";
 
-class NotePanel extends React.Component {
-  handleDelete = id => {
-    this.props.deleteHandler(id);
+const NotePanel = ({ noteArray, deleteHandler, editNote }) => {
+  const handleDelete = id => {
+    deleteHandler(id);
   };
 
-  handleEdit = id => {
-    this.props.editNote(id);
+  const handleEdit = id => {
+    editNote(id);
   };
 
-  markdownText = text => {
+  const markdownText = text => {
     let rawMarkup = marked(text, { sanitize: true });
     return { __html: rawMarkup };
   };
 
-  render() {
-    const { noteArray } = this.props;
-    return (
-      <div style={{ padding: 30, width: "50vw", margin: "0 auto" }}>
-        {noteArray
-          ? noteArray.map((n, i) => {
-              return (
-                <ExpansionPanel key={i} id={n.noteTitle}>
-                  <ExpansionPanelSummary expandIcon={<ExpandMoreOutlined />}>
-                    <Typography variant="title">
-                      {i + 1 + ". " + n.noteTitle}
-                    </Typography>
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
-                    <Typography
-                      dangerouslySetInnerHTML={this.markdownText(n.noteBody)}
-                    />
-                  </ExpansionPanelDetails>
-                  <Divider />
-                  <ExpansionPanelActions>
-                    <Button
-                      variant="contained"
-                      size="small"
-                      color="primary"
-                      onClick={() => this.handleEdit(n.id)}
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      variant="contained"
-                      size="small"
-                      color="secondary"
-                      onClick={() => this.handleDelete(n.id)}
-                    >
-                      Delete
-                    </Button>
-                  </ExpansionPanelActions>
-                </ExpansionPanel>
-              );
-            })
-          : null}
-      </div>
-    );
-  }
-}
+  return (
+    <div style={{ padding: 30, width: "50vw", margin: "0 auto" }}>
+      {noteArray
+        ? noteArray.map((n, i) => {
+            return (
+              <ExpansionPanel key={i} id={n.noteTitle}>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreOutlined />}>
+                  <Typography variant="title">
+                    {i + 1 + ". " + n.noteTitle}
+                  </Typography>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails>
+                  <Typography
+                    dangerouslySetInnerHTML={markdownText(n.noteBody)}
+                  />
+                </ExpansionPanelDetails>
+                <Divider />
+                <ExpansionPanelActions>
+                  <Button
+                    variant="contained"
+                    size="small"
+                    color="primary"
+                    onClick={() => handleEdit(n.id)}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    variant="contained"
+                    size="small"
+                    color="secondary"
+                    onClick={() => handleDelete(n.id)}
+                  >
+                    Delete
+                  </Button>
+                </ExpansionPanelActions>
+              </ExpansionPanel>
+            );
+          })
+        : null}
+    </div>
+  );
+};
 
 NotePanel.propTypes = {
   noteArray: PropTypes.array.isRequired,
