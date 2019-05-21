@@ -4,7 +4,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import PropTypes from "prop-types";
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import uuidv1 from "uuid";
 import NotePanel from "./NotePanel";
 
@@ -31,184 +31,152 @@ const styles = {
   }
 };
 
-class NoteForm extends Component {
-  state = {
-    notes: [],
-    noteTitle: "",
-    noteBody: "",
-    editing: false,
-    editingId: null
-  };
+const NoteForm = ({ classes }) => {
+  const [notes, setNotes] = useState([]);
+  const [noteTitle, setNoteTitle] = useState("");
+  const [noteBody, setNoteBody] = useState("");
+  const [editing, setEditing] = useState(false);
+  const [editingId, setId] = useState(null);
 
-  componentDidMount() {
-    try {
-      this.getLocalStorage();
-    } catch (err) {
-      console.log({ error: err });
-    }
-    window.addEventListener("beforeunload", this.saveToStorage.bind(this));
-  }
+  useEffect(() => {
+    const storedNotes = JSON.parse(localStorage.getItem("notes"));
+    setNotes(storedNotes);
+    return () => {
+      localStorage.setItem("notes", JSON.stringify(notes));
+    };
+  }, []);
 
-  componentWillUnmount() {
-    window.removeEventListener("beforeunload", this.saveToStorage.bind(this));
-    this.saveToStorage();
-  }
-
-  getLocalStorage = () => {
-    let notes = JSON.parse(localStorage.getItem("notes")) || [];
-    this.setState({ notes });
-  };
-
-  saveToStorage = () => {
-    localStorage.setItem("notes", JSON.stringify(this.state.notes));
-  };
-
-  handleChange = (e, field) => {
-    this.setState({ [field]: e.target.value });
-  };
-
-  handleSave = (e, title, body) => {
+  const handleSave = e => {
     e.preventDefault();
-    if (title === "") {
+    if (noteTitle === "") {
       alert("Your note is missing a title!");
-    } else if (body === "") {
+    } else if (noteBody === "") {
       alert("Your note is empty!");
     } else {
-      let newNote = { id: uuidv1(), noteTitle: title, noteBody: body };
-      let notesArr =
-        this.state.notes.length === 0
-          ? [newNote]
-          : [...this.state.notes, newNote];
-      this.setState({ notes: notesArr, noteTitle: "", noteBody: "" });
+      let newNote = { id: uuidv1(), noteTitle, noteBody };
+      let notesArr = notes.length === 0 ? [newNote] : [...notes, newNote];
+      setNotes(notesArr);
+      setNoteTitle("");
+      setNoteBody("");
     }
   };
 
-  editNote = id => {
-    this.setState({ editing: true, editingId: id });
-    const { notes } = this.state;
-    let note = notes.filter(n => n.id === id);
-    this.setState({
-      noteTitle: note[0].noteTitle,
-      noteBody: note[0].noteBody
-    });
-  };
-
-  handleEditSave = (e, title, body) => {
+  const handleEditSave = e => {
     e.preventDefault();
-    const { notes, editingId } = this.state;
-    if (title !== "" && body !== "") {
+    if (noteTitle !== "" && noteBody !== "") {
       let newNotes = notes.map(n => {
         if (n.id === editingId) {
-          n.noteTitle = title;
-          n.noteBody = body;
+          n.noteTitle = noteTitle;
+          n.noteBody = noteBody;
         }
         return n;
       });
-      this.setState({
-        notes: newNotes,
-        noteTitle: "",
-        noteBody: "",
-        editing: false,
-        editingId: null
-      });
+      setNotes(newNotes);
+      setNoteTitle("");
+      setNoteBody("");
+      setEditing(false);
+      setId(null);
     }
   };
 
-  handleDelete = id => {
-    const { editingId, notes } = this.state;
-    if (this.state.editing) {
+  const editNote = id => {
+    setEditing(true);
+    setId(id);
+    let note = notes.find(n => n.id === id);
+    setNoteTitle(note.noteTitle);
+    setNoteBody(note.noteBody);
+  };
+
+  const handleDelete = id => {
+    if (editing) {
       if (id === editingId) {
-        this.setState({ noteBody: "", noteTitle: "", editing: false });
+        setNoteBody("");
+        setNoteTitle("");
+        setEditing(false);
       }
     }
-    const newNoteArr = notes.filter(n => {
-      return n.id !== id;
-    });
-    this.setState({ notes: newNoteArr });
+    const newNoteArr = notes.filter(n => n.id !== id);
+    setNotes(newNoteArr);
   };
 
-  render() {
-    const { notes, noteTitle, noteBody } = this.state;
-    const { classes } = this.props;
-    return (
-      <div className={classes.container}>
-        <Typography component="h1" variant="display3">
-          Basic Notes App | by Warpfox
-        </Typography>
-        <br />
-        <Typography component="h2" variant="subtitle1">
-          The body of each note supports{" "}
-          <a
-            href="https://www.markdownguide.org/basic-syntax/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Markdown
-          </a>
-        </Typography>
-        <br />
-        <Paper className={classes.paper}>
-          <form className={classes.form} id="note-form">
-            <TextField
-              style={{ margin: 8 }}
-              fullWidth
-              id="noteTitle"
-              margin="normal"
-              label="Note Title"
-              placeholder="Type here to enter a title"
-              InputLabelProps={{
-                shrink: true
-              }}
-              onChange={e => this.handleChange(e, "noteTitle")}
-              value={noteTitle}
-            />
-            <br />
-            <TextField
-              style={{ margin: 8 }}
-              id="note-body"
-              margin="none"
-              multiline
-              rows="4"
-              fullWidth
-              label="Note Body"
-              placeholder="Enter your note here..."
-              InputLabelProps={{
-                shrink: true
-              }}
-              onChange={e => this.handleChange(e, "noteBody")}
-              value={noteBody}
-            />
-            <br />
-            {!this.state.editing ? (
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={e => this.handleSave(e, noteTitle, noteBody)}
-              >
-                Save
-              </Button>
-            ) : (
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={e => this.handleEditSave(e, noteTitle, noteBody)}
-              >
-                Finish Editing
-              </Button>
-            )}
-          </form>
-        </Paper>
-        <NotePanel
-          noteArray={notes}
-          deleteHandler={this.handleDelete}
-          editNote={this.editNote}
-        />
-      </div>
-    );
-  }
-}
+  return (
+    <div className={classes.container}>
+      <Typography component="h1" variant="display3">
+        Basic Notes App | by Warpfox
+      </Typography>
+      <br />
+      <Typography component="h2" variant="subtitle1">
+        The body of each note supports{" "}
+        <a
+          href="https://www.markdownguide.org/basic-syntax/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Markdown
+        </a>
+      </Typography>
+      <br />
+      <Paper className={classes.paper}>
+        <form className={classes.form} id="note-form">
+          <TextField
+            style={{ margin: 8 }}
+            fullWidth
+            id="noteTitle"
+            margin="normal"
+            label="Note Title"
+            placeholder="Type here to enter a title"
+            InputLabelProps={{
+              shrink: true
+            }}
+            onChange={e => setNoteTitle(e.target.value)}
+            value={noteTitle}
+          />
+          <br />
+          <TextField
+            style={{ margin: 8 }}
+            id="note-body"
+            margin="none"
+            multiline
+            rows="4"
+            fullWidth
+            label="Note Body"
+            placeholder="Enter your note here..."
+            InputLabelProps={{
+              shrink: true
+            }}
+            onChange={e => setNoteBody(e.target.value)}
+            value={noteBody}
+          />
+          <br />
+          {!editing ? (
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              onClick={e => handleSave(e)}
+            >
+              Save
+            </Button>
+          ) : (
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              onClick={e => handleEditSave(e)}
+            >
+              Finish Editing
+            </Button>
+          )}
+        </form>
+      </Paper>
+      <NotePanel
+        noteArray={notes}
+        deleteHandler={handleDelete}
+        editNote={editNote}
+      />
+    </div>
+  );
+};
 
 NoteForm.propTypes = {
   classes: PropTypes.object.isRequired,
